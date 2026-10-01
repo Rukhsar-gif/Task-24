@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="A localStorage-based recipe book with categories and CRUD functionality."
+    >
+
+    <meta
+        name="author"
+        content="Rukhsar Hussain"
+    >
+
+    <title>Recipe Book with Categories</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="header">
+
+        <div class="nav-container">
+
+            <a href="#" class="logo">
+                RH
+            </a>
+
+            <div>
+
+
+                <h1>
+                    Recipe Book
+                </h1>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <main class="main-container">
+
+        <section class="intro-section">
+
+            <div>
+                <p class="eyebrow">
+                    PERSONAL RECIPE COLLECTION
+                </p>
+
+                <h2>
+                    Save, organize and manage your recipes
+                </h2>
+
+                <p class="intro-text">
+                    Add your favorite recipes, assign categories,
+                    edit them anytime, and keep them saved locally
+                    in your browser.
+                </p>
+            </div>
+
+            <button
+                type="button"
+                class="primary-button"
+                id="addRecipeButton"
+            >
+                + Add Recipe
+            </button>
+
+        </section>
+
+
+        <section class="filter-section">
+
+            <div class="search-wrapper">
+
+                <label
+                    for="searchInput"
+                    class="sr-only"
+                >
+                    Search recipes
+                </label>
+
+                <input
+                    type="search"
+                    id="searchInput"
+                    placeholder="Search recipes..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div
+                class="category-filters"
+                id="categoryFilters"
+            >
+
+                <button
+                    type="button"
+                    class="filter-button active"
+                    data-category="All"
+                >
+                    All
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-button"
+                    data-category="Breakfast"
+                >
+                    Breakfast
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-button"
+                    data-category="Lunch"
+                >
+                    Lunch
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-button"
+                    data-category="Dinner"
+                >
+                    Dinner
+                </button>
+
+                <button
+                    type="button"
+                    class="filter-button"
+                    data-category="Dessert"
+                >
+                    Dessert
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <section
+            class="recipes-section"
+            aria-labelledby="recipesTitle"
+        >
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="eyebrow">
+                        YOUR COLLECTION
+                    </p>
+
+                    <h2 id="recipesTitle">
+                        My Recipes
+                    </h2>
+                </div>
+
+                <span
+                    class="recipe-count"
+                    id="recipeCount"
+                >
+                    0 recipes
+                </span>
+
+            </div>
+
+
+            <div
+                class="recipe-grid"
+                id="recipeGrid"
+            ></div>
+
+
+            <div
+                class="empty-state"
+                id="emptyState"
+                hidden
+            >
+
+                <div class="empty-icon">
+                    🍳
+                </div>
+
+                <h3>
+                    No recipes found
+                </h3>
+
+                <p>
+                    Add a recipe or try another category or search term.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Add / Edit Modal -->
+    <div
+        class="modal-overlay"
+        id="formModal"
+        hidden
+    >
+
+        <div
+            class="modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="formModalTitle"
+        >
+
+            <div class="modal-header">
+
+                <div>
+                    <p class="eyebrow">
+                        RECIPE FORM
+                    </p>
+
+                    <h2 id="formModalTitle">
+                        Add Recipe
+                    </h2>
+                </div>
+
+                <button
+                    type="button"
+                    class="icon-button"
+                    id="closeFormModal"
+                    aria-label="Close recipe form"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+
+            <form id="recipeForm">
+
+                <input
+                    type="hidden"
+                    id="recipeId"
+                >
+
+
+                <div class="form-group">
+
+                    <label for="recipeTitle">
+                        Recipe Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="recipeTitle"
+                        placeholder="e.g. Creamy Garlic Pasta"
+                        maxlength="80"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="recipeCategory">
+                            Category
+                        </label>
+
+                        <select
+                            id="recipeCategory"
+                            required
+                        >
+
+                            <option value="Breakfast">
+                                Breakfast
+                            </option>
+
+                            <option value="Lunch">
+                                Lunch
+                            </option>
+
+                            <option value="Dinner">
+                                Dinner
+                            </option>
+
+                            <option value="Dessert">
+                                Dessert
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="recipeTime">
+                            Time
+                        </label>
+
+                        <input
+                            type="text"
+                            id="recipeTime"
+                            placeholder="25 min"
+                            maxlength="30"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="recipeIngredients">
+                        Ingredients
+                    </label>
+
+                    <textarea
+                        id="recipeIngredients"
+                        rows="5"
+                        placeholder="Pasta&#10;Garlic&#10;Cream&#10;Parmesan cheese"
+                        required
+                    ></textarea>
+
+                    <small>
+                        Enter one ingredient per line.
+                    </small>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="recipeSteps">
+                        Preparation Steps
+                    </label>
+
+                    <textarea
+                        id="recipeSteps"
+                        rows="6"
+                        placeholder="Boil the pasta.&#10;Prepare the sauce.&#10;Mix and serve."
+                        required
+                    ></textarea>
+
+                    <small>
+                        Enter one step per line.
+                    </small>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="recipeDescription">
+                        Short Description
+                    </label>
+
+                    <textarea
+                        id="recipeDescription"
+                        rows="3"
+                        placeholder="Describe your recipe..."
+                        maxlength="300"
+                    ></textarea>
+
+                </div>
+
+
+                <p
+                    class="form-message"
+                    id="formMessage"
+                    aria-live="polite"
+                ></p>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        id="cancelFormButton"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                    >
+                        Save Recipe
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Recipe Detail Modal -->
+    <div
+        class="modal-overlay"
+        id="detailModal"
+        hidden
+    >
+
+        <div
+            class="modal detail-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="detailTitle"
+        >
+
+            <div class="modal-header">
+
+                <div>
+                    <p
+                        class="eyebrow"
+                        id="detailCategory"
+                    >
+                        CATEGORY
+                    </p>
+
+                    <h2 id="detailTitle">
+                        Recipe
+                    </h2>
+                </div>
+
+                <button
+                    type="button"
+                    class="icon-button"
+                    id="closeDetailModal"
+                    aria-label="Close recipe details"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+
+            <p
+                class="detail-time"
+                id="detailTime"
+            ></p>
+
+
+            <p
+                class="detail-description"
+                id="detailDescription"
+            ></p>
+
+
+            <div class="detail-block">
+
+                <h3>
+                    Ingredients
+                </h3>
+
+                <ul
+                    id="detailIngredients"
+                    class="detail-list"
+                ></ul>
+
+            </div>
+
+
+            <div class="detail-block">
+
+                <h3>
+                    Preparation
+                </h3>
+
+                <ol
+                    id="detailSteps"
+                    class="detail-list ordered"
+                ></ol>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
